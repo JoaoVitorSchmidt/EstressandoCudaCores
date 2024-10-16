@@ -1,11 +1,12 @@
-#include <stdio.h>
-#include <cuda.h>
+#include <iostream>
+#include <cuda_runtime.h>
+#include <chrono>  // Para medir o tempo de execução
 
-// Definição do tamanho da matriz (pode ser ajustado conforme necessário)
-#define N 1024  // Tamanho das matrizes NxN
+// Definição do tamanho da matriz
+#define N 2048  // Matriz grande para estressar a GPU
 
 // Kernel CUDA para multiplicação de matrizes
-__global__ void matrixMultiply(float *a, float *b, float *c, int width) {
+__global__ void matrixMultiply(float* a, float* b, float* c, int width) {
     int col = blockIdx.x * blockDim.x + threadIdx.x;
     int row = blockIdx.y * blockDim.y + threadIdx.y;
 
@@ -18,38 +19,57 @@ __global__ void matrixMultiply(float *a, float *b, float *c, int width) {
     }
 }
 
-int main() {
-    // Alocação de memória para matrizes no host
-    float *h_a, *h_b, *h_c;
-    int size = N * N * sizeof(float);
-    h_a = (float *)malloc(size);
-    h_b = (float *)malloc(size);
-    h_c = (float *)malloc(size);
-
-    // Inicializando matrizes com valores arbitrários
-    for (int i = 0; i < N * N; i++) {
-        h_a[i] = 1.0f;
-        h_b[i] = 1.0f;
+void initializeMatrix(float* matrix, int size) {
+    for (int i = 0; i < size; i++) {
+        matrix[i] = rand() % 100;  // Inicializa com valores aleatórios
     }
+}
 
-    // Alocação de memória para matrizes no device (GPU)
-    float *d_a, *d_b, *d_c;
-    cudaMalloc((void **)&d_a, size);
-    cudaMalloc((void **)&d_b, size);
-    cudaMalloc((void **)&d_c, size);
+int main() {
+    // Alocação de memória para matrizes no host (CPU)
+    float* h_a, * h_b, * h_c;
+    int size = N * N * sizeof(float);
+    h_a = (float*)malloc(size);
+    h_b = (float*)malloc(size);
+    h_c = (float*)malloc(size);
 
-    // Copiando matrizes do host para o device
+    // Inicializando as matrizes com valores arbitrários
+    initializeMatrix(h_a, N * N);
+    initializeMatrix(h_b, N * N);
+
+    // Alocação de memória no device (GPU)
+    float* d_a, * d_b, * d_c;
+    cudaMalloc((void**)&d_a, size);
+    cudaMalloc((void**)&d_b, size);
+    cudaMalloc((void**)&d_c, size);
+
+    // Copiando as matrizes do host (CPU) para o device (GPU)
     cudaMemcpy(d_a, h_a, size, cudaMemcpyHostToDevice);
     cudaMemcpy(d_b, h_b, size, cudaMemcpyHostToDevice);
 
-    // Definindo a grade e a organização dos blocos
-    dim3 threadsPerBlock(16, 16);  // Bloco 16x16 threads
+    // Configurando a grade e os blocos para o kernel CUDA
+    dim3 threadsPerBlock(16, 16);  // Blocos de 16x16 threads
     dim3 blocksPerGrid(N / threadsPerBlock.x, N / threadsPerBlock.y);
 
-    // Iniciando a multiplicação de matrizes na GPU
-    matrixMultiply<<<blocksPerGrid, threadsPerBlock>>>(d_a, d_b, d_c, N);
+    // Medir o tempo de execução
+    auto start = std::chrono::high_resolution_clock::now();
 
-    // Copiando o resultado de volta para o host
+    // Repetir a multiplicação várias vezes para estressar a GPU
+    int num_iterations = 100;
+    for (int i = 0; i < num_iterations; i++) {
+        matrixMultiply << <blocksPerGrid, threadsPerBlock >> > (d_a, d_b, d_c, N);
+    }
+
+    // Sincronizar a GPU para garantir que todos os kernels terminaram
+    cudaDeviceSynchronize();
+
+    // Medir o tempo após a execução
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<float> duration = end - start;
+    std::cout << "Tempo total para " << num_iterations << " multiplicações: "
+        << duration.count() << " segundos" << std::endl;
+
+    // Copiando o resultado de volta para o host (CPU)
     cudaMemcpy(h_c, d_c, size, cudaMemcpyDeviceToHost);
 
     // Liberando memória no device
@@ -63,7 +83,7 @@ int main() {
     free(h_c);
 
     // Finalizando
-    printf("Multiplicação de matrizes concluída!\n");
+    std::cout << "Estresse no CUDA Core concluído!" << std::endl;
 
     return 0;
 }
