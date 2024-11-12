@@ -39,9 +39,9 @@ __global__ void stressKernel(float *data, int size, int iterations) {
 }
 
 std::string runNvidiaSmi() {
-    FILE* pipe = _popen("nvidia-smi --query-gpu=utilization.gpu,utilization.memory,temperature.gpu,power.draw,memory.total,memory.used --format=csv,noheader,nounits", "r");
+    FILE* pipe = _popen("nvidia-smi --query-gpu=utilization.gpu,temperature.gpu,power.draw,memory.total,memory.used --format=csv,noheader,nounits", "r");
     if (!pipe) {
-        std::cerr << "Não foi possível executar nvidia-smi." << std::endl;
+        std::cerr << "Nao foi possivel executar nvidia-smi." << std::endl;
         return "";
     }
 
@@ -56,9 +56,9 @@ std::string runNvidiaSmi() {
 
 void monitorGPU(std::atomic<bool>& running) {
     while (running) {
-        std::cout << "\n" << std::string(109, '-') << "\n";
-        std::cout << "| GPU Utilization | Memory Utilization | Temperature | Power Draw | Total Memory | Used Memory | CUDA Cores |\n";
-        std::cout << std::string(109, '-') << "\n";
+        std::cout << "\n" << std::string(90, '-') << "\n";
+        std::cout << "| GPU Utilization | Temperature | Power Draw | Total Memory | Used Memory | CUDA Cores |\n";
+        std::cout << std::string(90, '-') << "\n";
 
         std::string output = runNvidiaSmi();
         if (output.empty()) {
@@ -75,15 +75,13 @@ void monitorGPU(std::atomic<bool>& running) {
             size_t pos2 = line.find(',', pos1 + 1);
             size_t pos3 = line.find(',', pos2 + 1);
             size_t pos4 = line.find(',', pos3 + 1);
-            size_t pos5 = line.find(',', pos4 + 1);
 
-            if (pos1 != std::string::npos && pos2 != std::string::npos && pos3 != std::string::npos && pos4 != std::string::npos && pos5 != std::string::npos) {
+            if (pos1 != std::string::npos && pos2 != std::string::npos && pos3 != std::string::npos && pos4 != std::string::npos) {
                 int gpuUtil = std::stoi(line.substr(0, pos1));
-                int memUtil = std::stoi(line.substr(pos1 + 1, pos2 - pos1 - 1));
-                int temp = std::stoi(line.substr(pos2 + 1, pos3 - pos2 - 1));
-                float power = std::stof(line.substr(pos3 + 1, pos4 - pos3 - 1));
-                int totalMem = std::stoi(line.substr(pos4 + 1, pos5 - pos4 - 1));
-                int usedMem = std::stoi(line.substr(pos5 + 1)); 
+                int temp = std::stoi(line.substr(pos1 + 1, pos2 - pos1 - 1));
+                float power = std::stof(line.substr(pos2 + 1, pos3 - pos2 - 1));
+                int totalMem = std::stoi(line.substr(pos3 + 1, pos4 - pos3 - 1));
+                int usedMem = std::stoi(line.substr(pos4 + 1)); 
 
                 int cudaCores = 0;
                 int deviceCount;
@@ -97,7 +95,6 @@ void monitorGPU(std::atomic<bool>& running) {
 
                 std::cout << "| " 
                           << std::setw(14) << gpuUtil << "% "
-                          << "| " << std::setw(17) << memUtil << "% "
                           << "| " << std::setw(9) << temp << " C "
                           << "| " << std::setw(8) << std::fixed << std::setprecision(2) << power << " W "
                           << "| " << std::setw(9) << totalMem << " MB "
@@ -108,7 +105,7 @@ void monitorGPU(std::atomic<bool>& running) {
             }
         }
 
-        std::cout << std::string(109, '-') << "\n";
+        std::cout << std::string(90, '-') << "\n";
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 }
