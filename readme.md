@@ -45,9 +45,9 @@ Essas instruções permitirão que você obtenha uma cópia do projeto em opera�
 
 - **CUDA Toolkit**: Baixe e instale a versão 12.6.2 do CUDA Toolkit a partir do site oficial da NVIDIA: [Download CUDA Toolkit 12.6.2](https://developer.nvidia.com/cuda-toolkit-archive). Este kit contém as bibliotecas e ferramentas necessárias para desenvolvimento. Checar a etapa [Sobre o CUDA](#sobre-o-cuda) antes de fazer a instalação.
 
-- **IDE para C++**: Utilize uma IDE que suporte C++, como o [Visual Studio Code (VSCode)](https://code.visualstudio.com/).
+- **IDE para C++**: Utilize uma IDE que suporte C++, como o [Visual Studio](https://visualstudio.microsoft.com/pt-br/downloads/).
 
-- **Extensões para VSCode ou IDE de preferência**: Instale o [C/C++ Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) para suporte completo ao desenvolvimento em C++ no VSCode.
+- **Compilador C++**: Instale o módulo do Visual Studio **Desenvolvimento para desktop com C++** pois ele instala um compilador, ou caso prefira instale um compilador de sua preferência.
 
 - **Clonar o Projeto do GitHub**: Veja a seção [Como Clonar o Projeto](#como-clonar-o-projeto) para instruções sobre como clonar este repositório.
 
@@ -116,54 +116,32 @@ Para garantir que o CUDA foi instalado corretamente e está funcionando, siga os
    ```bash
    nvcc --version
 
-## ⚙️ Como Baixar e Instalar o MinGW para Compilar C++
+## ⚙️ Como Baixar e Instalar o Visual Studio para Compilar C++
 
-O MinGW (Minimalist GNU for Windows) é um conjunto de ferramentas que inclui o compilador GCC (GNU Compiler Collection), usado para compilar programas em C e C++ no sistema operacional Windows. Ele é essencial para desenvolver e executar códigos C++ no Windows, pois fornece o compilador necessário para transformar o código-fonte em executáveis compatíveis com o sistema.
+**Passo 1:** Baixar o Instalador do Visual Studio
+1. Acesse a página de download do Visual Studio: https://visualstudio.microsoft.com/
+2. Clique em "Baixar Visual Studio" e escolha a edição desejada (Community, Professional ou Enterprise).
 
-### Baixando o MinGW
+**Passo 2:** Iniciar o Instalador
+1. Execute o arquivo baixado para iniciar o instalador do Visual Studio.
+2. Após carregar, você verá uma lista de cargas de trabalho (workloads) disponíveis.
 
-1. **Acesse o Site do MinGW-w64**:  
-   Visite o site [MinGW-w64](https://www.mingw-w64.org/) para fazer o download. O MinGW-w64 é uma versão atualizada e recomendada para Windows, incluindo suporte para os compiladores C e C++.
+**Passo 3:** Selecionar o Módulo de Desenvolvimento para Desktop com C++
+1. Na seção de cargas de trabalho, marque "Desenvolvimento para desktop com C++".
+2. Confirme que a opção inclui:
+   - Ferramentas do C++ (como compilador e depurador)
+   - Ferramentas para desenvolvimento de aplicativos nativos em C++
+3. (Opcional) Se desejar funcionalidades adicionais, você pode selecionar outras cargas de trabalho ou componentes individuais no menu "Componentes individuais".
 
-2. **Escolha a Versão e Baixe o Instalador**:  
-   Na página de download, selecione a versão do MinGW compatível com seu sistema operacional.
+**Passo 4:** Instalar o Visual Studio
+1. Clique em "Instalar" para iniciar a instalação. Dependendo da sua conexão com a internet, esse processo pode levar alguns minutos.
+2. Aguarde a conclusão da instalação. O Visual Studio será iniciado automaticamente após a instalação, se a opção "Iniciar após a instalação" estiver marcada.
 
-### Instalando o MinGW
-
-1. **Arquitetura**:  
-   Durante a instalação, escolha a arquitetura correta para o seu sistema (normalmente 64-bit para sistemas modernos ou 32-bit se aplicável).
-
-2. **Versão do GCC**:  
-   Selecione a versão recomendada do GCC, que incluirá o compilador C++.
-
-3. **Threads e Exceções**:  
-   A configuração padrão geralmente é suficiente para uso geral.
-
-4. **Finalizando a Instalação**:  
-   Complete a instalação e anote o caminho onde o MinGW foi instalado. Esse caminho é essencial para a próxima etapa, onde configuraremos o ambiente do sistema para que o compilador seja acessível a partir de qualquer terminal.
-
-### Configurando o Path do Sistema
-
-Para compilar e executar programas C++ em qualquer terminal, é necessário configurar o caminho (`Path`) no Windows:
-
-1. Abra o **Painel de Controle** e vá para **Sistema e Segurança > Sistema**.
-2. Clique em **Configurações avançadas do sistema** e depois em **Variáveis de ambiente**.
-3. Encontre a variável `Path` nas variáveis de sistema e clique em **Editar**.
-4. Adicione uma nova entrada com o caminho para o MinGW:
-```bash
-C:\msys64\mingw64\bin
-```
-5. Confirme todas as alterações.
-
-### Testando a Instalação
-
-Para verificar se a configuração está correta:
-
-1. Abra o **Prompt de Comando** ou o **PowerShell**.
-2. Digite:
-```bash
-g++ --version
-```
+**Passo 5:** Abrir o Visual Studio e Configurar um Projeto em C++
+1. Abra o Visual Studio (se ainda não estiver aberto).
+2. Na tela inicial, selecione "Criar um novo projeto".
+3. Escolha um dos templates de projeto em C++ (por exemplo, "Aplicativo de Console em C++") e clique em "Avançar".
+4. Defina um nome e um local para o projeto, e clique em "Criar" para começar.
 
 # 📦 Como executar
 
