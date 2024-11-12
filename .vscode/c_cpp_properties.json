@@ -1,17 +1,26 @@
 {
   "configurations": [
     {
-      "name": "windows-gcc-x64",
+      "name": "Win32",
       "includePath": [
-        "${workspaceFolder}/**"
+        "${workspaceFolder}/**",
+        "C:/GLFW/include",  // Caminho para a pasta de cabeçalhos do GLFW
+        "C:/CUDA/include",   // Caminho para a pasta de cabeçalhos do CUDA
+        "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.2/include"  // Ajuste conforme sua versão do CUDA
       ],
-      "compilerPath": "gcc",
-      "cStandard": "${default}",
-      "cppStandard": "${default}",
-      "intelliSenseMode": "windows-gcc-x64",
-      "compilerArgs": [
-        ""
-      ]
+      "defines": [],
+      "compilerPath": "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/XX.X.X/bin/Hostx64/x64/cl.exe",  // Caminho do compilador do Visual Studio
+      "cStandard": "c11",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "msvc-x64",
+      "browse": {
+        "path": [
+          "C:/GLFW/include",
+          "C:/CUDA/include",
+          "${workspaceFolder}/**"
+        ],
+        "limitSymbolsToIncludedHeaders": true
+      }
     }
   ],
   "version": 4

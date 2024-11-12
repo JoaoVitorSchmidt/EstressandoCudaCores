@@ -20,5 +20,10 @@
         }
       ]
     }
+  ],
+  "args": [
+      "-IC:/GLFW/include",
+      "-LC:/GLFW/lib-vc2022",
+      "-lglfw3", "-lgdi32", "-lcuda", "-lopengl32", "-lGLFW" // Adicione outras dependências necessárias
   ]
 }
